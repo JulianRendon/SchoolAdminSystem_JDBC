@@ -6,112 +6,104 @@
 package interfaceDAOImplementation;
 
 import connection.ConnectionFactory;
-import interfaceDAO.StudentDAO;
+import interfaceDAO.CourseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import model.Student;
+import model.Course;
 
 /**
  *
  * @author Julian
  */
-public class StudentDAOImplementation implements StudentDAO {
+public class CourseDAOImplementation implements CourseDAO {
 
     Connection connection = ConnectionFactory.getConnection();
 
-    //Constructor   
-    public StudentDAOImplementation() {
+    // Constructor
+    public CourseDAOImplementation() {
     }
 
-    // Create a new Student
-    public void create(Student student) {
-
+    // Create a new Course
+    public void create(Course course) {
         PreparedStatement preparedStatement = null;
 
         try {
-            String createQuery = "INSERT INTO STUDENT (student_id, first_name, last_name) VALUES(?,?,?)";
+            String createQuery = "INSERT INTO COURSE (COURSE_ID, COURSE_NAME) VALUES(?,?)";
             preparedStatement = connection.prepareStatement(createQuery);
-            preparedStatement.setInt(1, student.getStudentId());
-            preparedStatement.setString(2, student.getStudentFirstname());
-            preparedStatement.setString(3, student.getStudentLastname());
-            preparedStatement.executeUpdate();
+            preparedStatement.setInt(1, course.getCourseId());
+            preparedStatement.setString(2, course.getCourseName());
+            preparedStatement.executeQuery();
             preparedStatement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
     }
 
-    // Find a student by ID
+    // Find a course by ID
     @Override
-    public Student findById(int id) {
+    public Course findById(int id) {
 
-        Student student = null;
+        Course course = null;
         ResultSet resultSet = null;
 
         PreparedStatement preparedStatement = null;
 
         try {
-            String selectIdQuery = "SELECT * FROM STUDENT WHERE STUDENT_ID= ?";
+            String selectIdQuery = "SELECT * FROM COURSE WHERE COURSE_ID = ?";
             preparedStatement = connection.prepareStatement(selectIdQuery);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            student = new Student();
-            student.setStudentId(resultSet.getInt("student_id"));
-            student.setStudentFirstname(resultSet.getString("first_name"));
-            student.setStudentLastname(resultSet.getString("last_name"));
+            course = new Course();
+            course.setCourseId(resultSet.getInt("course_id"));
+            course.setCourseName(resultSet.getString("course_name"));
             resultSet.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return student;
+        return course;
     }
 
-    // find all students
-    public List<Student> findAll() {
+    // find all courses
+    public List<Course> findAll() {
 
-        List<Student> students = new ArrayList<>();
-        Student student = null;
+        List<Course> courses = new ArrayList<>();
+        Course course = null;
         ResultSet resultSet;
         PreparedStatement preparedStatement;
 
         try {
-            String selectAllQuery = "SELECT * FROM STUDENT ORDER BY STUDENT_ID";
+            String selectAllQuery = "SELECT * FROM COURSE ORDER BY COURSE_ID";
             preparedStatement = connection.prepareStatement(selectAllQuery);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                student = new Student();
-                student.setStudentId(resultSet.getInt("student_id"));
-                student.setStudentFirstname(resultSet.getString("first_name"));
-                student.setStudentLastname(resultSet.getString("last_name"));
-                students.add(student);
+                course = new Course();
+                course.setCourseId(resultSet.getInt("course_id"));
+                course.setCourseName(resultSet.getString("course_name"));
+                courses.add(course);
             }
             resultSet.close();
             preparedStatement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return students;
+        return courses;
     }
 
-    // Update a student's info
-    public void update(Student student) {
+    // Update a course's info
+    public void update(Course course) {
 
         PreparedStatement preparedStatement;
 
         try {
-            String updateQuery = "UPDATE STUDENT SET FIRST_NAME = ?, LAST_NAME = ? WHERE STUDENT_ID = ?";
-            //System.out.println("Query = " + updateQuery);
+            String updateQuery = "UPDATE COURSE SET COURSE_NAME = ? WHERE COURSE_ID = ?";
             preparedStatement = connection.prepareStatement(updateQuery);
-            preparedStatement.setString(1, student.getStudentFirstname());
-            preparedStatement.setString(2, student.getStudentLastname());
-            preparedStatement.setInt(3, student.getStudentId());
+            preparedStatement.setString(1, course.getCourseName());
+            preparedStatement.setInt(2, course.getCourseId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException ex) {
@@ -119,13 +111,13 @@ public class StudentDAOImplementation implements StudentDAO {
         }
     }
 
-    // delete a student
+    // delete a course
     public void delete(int id) {
 
         PreparedStatement preparedStatement;
 
         try {
-            String deleteQuery = "DELETE FROM STUDENT WHERE STUDENT_ID =" + id;
+            String deleteQuery = "DELETE FROM COURSE WHERE COURSE_ID = " + id;
             preparedStatement = connection.prepareStatement(deleteQuery);
             preparedStatement.executeUpdate();
             preparedStatement.close();

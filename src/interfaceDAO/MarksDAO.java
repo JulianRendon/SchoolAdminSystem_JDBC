@@ -6,22 +6,18 @@
 package interfaceDAO;
 
 import java.util.List;
-import model.Student;
+import model.Marks;
 
 /**
  *
  * @author Julian
  */
-public interface StudentDAO {
+public interface MarksDAO {
 
-    void create(Student st);
+    void create(Marks mk);
 
-    void update(Student st);
+    List<Marks> findById(int courseId);
 
-    void delete(int id);
+    List<Marks> findAll();
 
-    List<Student> findAll();
-
-    Student findById(int id);
-    
 }
