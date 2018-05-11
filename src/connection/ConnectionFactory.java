@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author user
+ * @author Julian
  */
 public class ConnectionFactory {
 
